@@ -1,8 +1,10 @@
-var usernameAvailable = false;
+$(document).ready(function(){
+    init();
+    var usernameAvailable = false;
         
     //Displaying City from API after typing a zip code    
     $("#zip").on("change", function(){
-            
+            $("#zipError").hide();
             var currentZip = $("#zip").val();
             //alert(  $("#zip").val()  );
             $.ajax({
@@ -10,7 +12,11 @@ var usernameAvailable = false;
                  url: `https://itcdland.csumb.edu/~milara/ajax/cityInfoByZip?zip=${currentZip}`,
             dataType: "json",
              success: function(result,status) {
-                  
+
+                  if(!result){
+                      // zipcode not found
+                      $("#zipError").html("Zipcode not found!").show();
+                  }
                   //alert(result.city);
                   $("#city").html(result.city);
                   $("#latitude").html(result.latitude);
@@ -69,8 +75,9 @@ var usernameAvailable = false;
            //alert("submitting form...");
            if (!isFormValid()) {
              event.preventDefault();
+             return;
            }
-           
+           window.location.href = "../welcome.html"
        });//signupForm
        
        function isFormValid(){
@@ -89,4 +96,25 @@ var usernameAvailable = false;
             isValid = false;
           }
           return isValid;
+       }// isFormValid
+
+       function init(){
+           loadStates();
        }
+
+       function loadStates(){
+        $.ajax({
+            method: "GET",
+               url: "https://cst336.herokuapp.com/projects/api/state_abbrAPI.php",
+          dataType: "json",
+           success: function(result,status) {
+                
+              //alert(result[0].county);
+              $("#state").html("<option> Select One </option>");
+              for (let i=0; i < result.length; i++){
+                  $("#state").append(`<option value="${result[i].usps}">` + result[i].state + "</option>");
+              }                              
+            }
+        });//ajax
+       }
+});
