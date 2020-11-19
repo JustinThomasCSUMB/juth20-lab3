@@ -77,7 +77,7 @@ $(document).ready(function(){
              event.preventDefault();
              return;
            }
-           window.location.href = "../welcome.php"
+           window.location.href = "../welcome.html"
        });//signupForm
        
        function isFormValid(){
